@@ -80,14 +80,7 @@ int main() {
             } else {
                 cout << "** Invalid account, transaction ignored" << endl;
             }
-            ofstream outfile;
-            outfile.open(infilename);
-            outfile << acct1 << " " << bal1 << endl;
-            outfile << acct2 << " " << bal2 << endl;
-            outfile << acct3 << " " << bal3 << endl;
-            outfile << acct4 << " " << bal4 << endl;
-            outfile << acct5 << " " << bal5 << endl;
-            outfile.close();
+            
         // withdrawl
         } else if (command == "-") {
             int account;
@@ -114,14 +107,6 @@ int main() {
                 cout << "** Invalid account, transaction ignored" << endl;
             }
 
-            ofstream outfile;
-            outfile.open(infilename);
-            outfile << acct1 << " " << bal1 << endl;
-            outfile << acct2 << " " << bal2 << endl;
-            outfile << acct3 << " " << bal3 << endl;
-            outfile << acct4 << " " << bal4 << endl;
-            outfile << acct5 << " " << bal5 << endl;
-            outfile.close();
         // check balance
         } else if (command == "?") {
             int account;
@@ -173,38 +158,23 @@ int main() {
         }
     }
     
-    /*
-    not sure if this is needed for part two of the project??
-
-    // +1 dollar
-    infile.close();
-    cout << "** Adding $1 to each balance..." << endl;
-    bal1 += 1.0;
-    bal2 += 1.0;
-    bal3 += 1.0;
-    bal4 += 1.0;
-    bal5 += 1.0;
-
+    // update bankv1-1.txt with information from program run
     string outfilename = infilename;
     ofstream outfile;
-
-    outfile.open(outfilename);
+    outfile.open(infilename);
     if (!outfile.good()){
-        cout << "**Error: unable to open output file '" << outfilename << "'" << endl;
+        cout << "**Error: unable to open output file '" << infilename << "'" << endl;
         return 0;
     }
-
     outfile << acct1 << " " << bal1 << endl;
     outfile << acct2 << " " << bal2 << endl;
     outfile << acct3 << " " << bal3 << endl;
     outfile << acct4 << " " << bal4 << endl;
     outfile << acct5 << " " << bal5 << endl;
-
     outfile.close();
-    */
 
     cout << "** Saving account data..." << endl;
     cout << "** Done ** " << endl;
-
+    
     return 0;
 }
