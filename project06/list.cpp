@@ -7,17 +7,12 @@
 // head and tail of list. The nodes contain 2 data values, a string
 // and an integer.
 //
-
 #include <iostream>
 #include <string>
 #include <exception>
 #include <stdexcept>
-
 #include "list.h"
-
 using namespace std;
-
-
 
 //
 // private member functions:
@@ -28,13 +23,19 @@ using namespace std;
 //
 // Time complexity: O(N)
 //
-void List::initAndDeepCopy(const List& other)
+void List::initAndDeepCopy(const List &other)
 {
-   //
-   // TODO: init this list, then make copy of other
-   //
-}
+    this->Head = nullptr;
+    this->Tail = nullptr;
+    this->Count = 0;
 
+    Node * cur = other.Head;
+    while (cur != nullptr)
+    {
+        this->push_back(cur->Data.Value1, cur->Data.Value2);
+        cur = cur->Next;
+    }
+}
 
 // 
 // free the nodes in the list and resets to empty
@@ -43,12 +44,20 @@ void List::initAndDeepCopy(const List& other)
 //
 void List::freeAndReset()
 {
-   //
-   // TODO: free this list, then reset to empty
-   //
+    Node * cur = Head;
+    Node * prev = nullptr;
+
+    while (cur != nullptr)
+    {
+        prev = cur;
+        cur = cur->Next;
+        delete prev;
+    }
+
+    this->Head = nullptr;
+    this->Tail = nullptr;
+    this->Count = 0;
 }
-
-
 
 //
 // public member functions:
@@ -63,9 +72,9 @@ void List::freeAndReset()
 //
 List::List()
 {
-   this->Head = nullptr;
-   this->Tail = nullptr;
-   this->Count = 0;
+    this->Head = nullptr;
+    this->Tail = nullptr;
+    this->Count = 0;
 }
 
 //
@@ -75,9 +84,9 @@ List::List()
 // 
 // Time complexity: O(N)
 //
-List::List(const List& other)
+List::List(const List &other)
 {
-   this->initAndDeepCopy(other);
+    this->initAndDeepCopy(other);
 }
 
 //
@@ -89,7 +98,7 @@ List::List(const List& other)
 //
 List::~List()
 {
-   this->freeAndReset();
+    this->freeAndReset();
 }
 
 //
@@ -101,20 +110,20 @@ List::~List()
 // 
 // Time complexity: O(N)
 //
-List& List::operator=(const List& other)
+List &List::operator=(const List &other)
 {
-   if (this == &other)  // special case: check for L = L;
-      return *this;     // do nothing and just return THIS object back
+    if (this == &other)	// special case: check for L = L;
+        return * this;	// do nothing and just return THIS object back
 
-   //
-   // This is different from a copy constructor, because "this" list
-   // exists and contains nodes.  So we have to free "this" list before
-   // we copy the "other" list:
-   //
-   this->freeAndReset();
-   this->initAndDeepCopy(other);
+   	//
+   	// This is different from a copy constructor, because "this" list
+   	// exists and contains nodes.  So we have to free "this" list before
+   	// we copy the "other" list:
+   	//
+    this->freeAndReset();
+    this->initAndDeepCopy(other);
 
-   return *this;  // done, return THIS object back
+    return * this;	// done, return THIS object back
 }
 
 //
@@ -126,10 +135,7 @@ List& List::operator=(const List& other)
 //
 int List::size()
 {
-   //
-   // TODO:
-   //
-   return -123;
+    return this->Count;
 }
 
 //
@@ -141,10 +147,8 @@ int List::size()
 //
 bool List::empty()
 {
-   //
-   // TODO:
-   //
-   return true;
+    if (Head == nullptr) return true;
+    return false;
 }
 
 //
@@ -159,10 +163,19 @@ bool List::empty()
 //
 int List::search(string value)
 {
-   //
-   // TODO:
-   //
-   return -123;
+    Node * cur = this->Head;
+    int i = 0;
+
+    while (cur != nullptr)
+    {
+        if (cur->Data.Value1 == value)
+        {
+            return i;
+        }
+        cur = cur->Next;
+        i++;
+    }
+    return -1;
 }
 
 //
@@ -176,12 +189,23 @@ int List::search(string value)
 //
 // Time complexity: on average O(N)
 //
-void List::retrieve(int pos, string& value1, int& value2)
+void List::retrieve(int pos, string &value1, int &value2)
 {
-   //
-   // TODO:
-   //
-   throw invalid_argument("List::retrieve: invalid position");
+    try 
+    {
+        Node * cur = this->Head;
+        for (int i = 0; i < pos; i++)
+        {
+            cur = cur->Next;
+        }
+
+        value1 = cur->Data.Value1;
+        value2 = cur->Data.Value2;
+    }
+    catch (exception & e)
+    {
+        throw invalid_argument("List::retrieve: invalid position");
+    }
 }
 
 //
@@ -202,10 +226,29 @@ void List::retrieve(int pos, string& value1, int& value2)
 //
 void List::insert(int pos, string value1, int value2)
 {
-   //
-   // TODO:
-   //
-   throw invalid_argument("List::insert: invalid position");
+    try
+    {
+        Node * cur = this->Head;
+        Node * prev = nullptr;
+
+        for (int i = 0; i < pos; i++)
+        {
+            prev = cur;
+            cur = cur->Next;
+        }
+
+        Node * newN = new Node();
+        newN->Data.Value1 = value1;
+        newN->Data.Value2 = value2;
+
+        newN->Next = cur;
+        prev->Next = newN;
+        this->Count++;
+    }
+    catch(exception & e)
+    {
+        throw invalid_argument("List::insert: invalid position");
+    }
 }
 
 //
@@ -221,10 +264,10 @@ void List::insert(int pos, string value1, int value2)
 //
 void List::remove(int pos)
 {
-   //
-   // TODO:
-   //
-   throw invalid_argument("List::remove: invalid position");
+   	//
+   	// TODO:
+   	//
+    throw invalid_argument("List::remove: invalid position");
 }
 
 //
@@ -236,11 +279,11 @@ void List::remove(int pos)
 // 
 // Time complexity: O(1)
 //
-void List::front(string& value1, int& value2)
+void List::front(string &value1, int &value2)
 {
-   //
-   // TODO:
-   //
+   	//
+   	// TODO:
+   	//
 }
 
 //
@@ -252,11 +295,11 @@ void List::front(string& value1, int& value2)
 // 
 // Time complexity: O(1)
 //
-void List::back(string& value1, int& value2)
+void List::back(string &value1, int &value2)
 {
-   //
-   // TODO:
-   //
+   	//
+   	// TODO:
+   	//
 }
 
 //
@@ -268,9 +311,9 @@ void List::back(string& value1, int& value2)
 //
 void List::push_front(string value1, int value2)
 {
-   //
-   // TODO:
-   //
+   	//
+   	// TODO:
+   	//
 }
 
 //
@@ -282,7 +325,7 @@ void List::push_front(string value1, int value2)
 //
 void List::push_back(string value1, int value2)
 {
-   //
-   // TODO:
-   //
+   	//
+   	// TODO:
+   	//
 }

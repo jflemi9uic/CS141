@@ -1,0 +1,8 @@
+e cs251 fzizza
+l cs211
+p commands5.txt
+e cs211 fzizza
+p commands6.txt
+e cs251 fzizza
+w cs251 mzizza 20
+q

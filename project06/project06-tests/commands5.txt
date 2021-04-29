@@ -1,0 +1,4 @@
+i cs211 10
+i cs251 4
+e cs211 mzizza
+q
