@@ -25,10 +25,11 @@ using namespace std;
 //
 void List::initAndDeepCopy(const List &other)
 {
+    // initialize the list to empty
     this->Head = nullptr;
     this->Tail = nullptr;
     this->Count = 0;
-
+    
     Node * cur = other.Head;
     while (cur != nullptr)
     {
@@ -44,7 +45,7 @@ void List::initAndDeepCopy(const List &other)
 //
 void List::freeAndReset()
 {
-    Node * cur = Head;
+    Node * cur = this->Head;
     Node * prev = nullptr;
 
     while (cur != nullptr)
@@ -147,7 +148,7 @@ int List::size()
 //
 bool List::empty()
 {
-    if (Head == nullptr) return true;
+    if (this->Head == nullptr) return true;
     return false;
 }
 
@@ -191,21 +192,19 @@ int List::search(string value)
 //
 void List::retrieve(int pos, string &value1, int &value2)
 {
-    try 
+    if (pos < 0 || pos >= this->size())
     {
-        Node * cur = this->Head;
-        for (int i = 0; i < pos; i++)
-        {
-            cur = cur->Next;
-        }
+        throw invalid_argument("List::insert: invalid position");
+    }
 
-        value1 = cur->Data.Value1;
-        value2 = cur->Data.Value2;
-    }
-    catch (exception & e)
+    Node * cur = this->Head;
+    for (int i = 0; i < pos; i++)
     {
-        throw invalid_argument("List::retrieve: invalid position");
+        cur = cur->Next;
     }
+
+    value1 = cur->Data.Value1;
+    value2 = cur->Data.Value2;
 }
 
 //
@@ -226,7 +225,21 @@ void List::retrieve(int pos, string &value1, int &value2)
 //
 void List::insert(int pos, string value1, int value2)
 {
-    try
+    if (pos < 0 || pos >= this->size())
+    {
+        throw invalid_argument("List::insert: invalid position");
+    }
+    if (pos == 0)
+    {
+        Node * newN = new Node();
+        newN->Data.Value1 = value1;
+        newN->Data.Value2 = value2;
+
+        newN->Next = this->Head;
+        this->Head = newN;
+        this->Count++;
+    }
+    else
     {
         Node * cur = this->Head;
         Node * prev = nullptr;
@@ -245,10 +258,6 @@ void List::insert(int pos, string value1, int value2)
         prev->Next = newN;
         this->Count++;
     }
-    catch(exception & e)
-    {
-        throw invalid_argument("List::insert: invalid position");
-    }
 }
 
 //
@@ -264,10 +273,45 @@ void List::insert(int pos, string value1, int value2)
 //
 void List::remove(int pos)
 {
-   	//
-   	// TODO:
-   	//
-    throw invalid_argument("List::remove: invalid position");
+    if (pos < 0 || pos >= this->size())
+    {
+        throw invalid_argument("List::insert: invalid position");
+    }
+    
+    if (pos == 0)
+    {
+        Node * first = this->Head;
+        Node * second = this->Head->Next;
+        delete first;
+        this->Head = second;
+        this->Count++;
+
+        return;
+    }
+
+    Node * cur = this->Head;
+    Node * prev = nullptr;
+
+    for (int i = 0; i < pos; i++)
+    {
+        prev = cur;
+        cur = cur->Next;
+    }
+
+    // at this point cur is the node that we want to delete and prev is the node before
+    Node * temp = cur->Next;
+    if (temp == nullptr) // the last node is being removed
+    {
+        prev->Next = nullptr;
+        delete cur;
+        this->Tail = prev;
+    }
+    else // deleting a node that is in the middle of the list
+    {
+        prev->Next = temp;
+        delete cur;
+    }
+    this->Count--;
 }
 
 //
@@ -281,9 +325,14 @@ void List::remove(int pos)
 //
 void List::front(string &value1, int &value2)
 {
-   	//
-   	// TODO:
-   	//
+    Node * cur = this->Head;
+
+    if (cur == nullptr)
+    {
+        throw runtime_error("List::front: empty list");
+    }
+    value1 = cur->Data.Value1;
+    value2 = cur->Data.Value2;
 }
 
 //
@@ -297,9 +346,14 @@ void List::front(string &value1, int &value2)
 //
 void List::back(string &value1, int &value2)
 {
-   	//
-   	// TODO:
-   	//
+    Node * cur = this->Tail;
+
+    if (cur == nullptr)
+    {
+        throw runtime_error("List::front: empty list");
+    }
+    value1 = cur->Data.Value1;
+    value2 = cur->Data.Value2;
 }
 
 //
@@ -311,9 +365,23 @@ void List::back(string &value1, int &value2)
 //
 void List::push_front(string value1, int value2)
 {
-   	//
-   	// TODO:
-   	//
+    Node * newN = new Node();
+    newN->Data.Value1 = value1;
+    newN->Data.Value2 = value2;
+
+    if (this->size() == 0)
+    {
+        newN->Next = this->Head;
+        this->Head = newN;
+        this->Tail = newN;
+        this->Count++;
+    }
+    else
+    {
+        newN->Next = this->Head;
+        this->Head = newN;
+        this->Count++;
+    }
 }
 
 //
@@ -325,7 +393,39 @@ void List::push_front(string value1, int value2)
 //
 void List::push_back(string value1, int value2)
 {
-   	//
-   	// TODO:
-   	//
+    Node * newN = new Node();
+    newN->Data.Value1 = value1;
+    newN->Data.Value2 = value2;
+
+    if (this->size() == 0)
+    {
+        this->Head = newN;
+        this->Tail = newN;
+        newN->Next = nullptr;
+        this->Count++;
+    }
+    else
+    {
+        this->Tail->Next = newN;
+        newN->Next = nullptr;
+        this->Tail = newN;
+        this->Count++; 
+    }
+}
+
+//
+// print
+//
+// prints the list for testing purposes
+//
+void List::print()
+{
+    Node * cur = this->Head;
+
+    while (cur != nullptr)
+    {
+        cout << cur->Data.Value1 << " ";
+        cur = cur->Next;
+    }
+    cout << endl;
 }

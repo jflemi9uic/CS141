@@ -200,4 +200,11 @@ public:
    // Time complexity: O(1)
    //
    void push_back(string value1, int value2);
+
+   //
+   // print
+   // 
+   // prints the list for testing purposes
+   //
+   void print();
 };
